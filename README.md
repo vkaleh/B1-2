@@ -141,6 +141,294 @@ Killed
 <br>
 
 ### 2-2. CPU Latency
+#### 2-2-1. 실행 로그
+1차 시도 (CPU_MAX_OCCUPY = 10)
+```bash
+agent-admin@c37974f555e9:~$ export CPU_MAX_OCCUPY=10
+agent-admin@c37974f555e9:~$ /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'agent-admin' (uid=1001)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [OK]
+   ... Log directory is writable: /var/log/agent-app
+[6/6] Verifying Mission Environment       [OK]
+   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=10%, MULTI_THREAD_ENABLE=False
+------------------------------------------------------------
+All Boot Checks Passed!
+Agent READY
+2026-05-25 13:32:08,009 [INFO] [SafetyGuard] Process priority lowered (nice=10).
+2026-05-25 13:32:08,009 [INFO] Agent listening at port 15034
+
+==================================================
+ [ Agent Initiate ] Resource Check 
+==================================================
+ [ MEMORY ] Limit: 512MB 		[ OK ]
+ [ CPU    ] Limit: 10%  		[ OK ]
+ [ THREAD ] Concurrency: False 		[ OK ]
+--------------------------------------------------
+ >>> SYSTEM STATUS: STABLE. STARTING WORKLOAD MONITORING...
+==================================================
+
+2026-05-25 13:32:10,012 [INFO] >>> Scenario Selected: [Healthy System Monitoring]
+
+>>> [SYSTEM] ALL CONFIGURATIONS OPTIMAL. RUNNING STABILITY TEST... <<<
+
+2026-05-25 13:32:10,012 [INFO] [Scheduler] Task Scheduler Initialized.
+2026-05-25 13:32:10,013 [INFO] [Scheduler] Registered Tasks: ['Thread-A', 'Thread-B', 'Thread-C']
+2026-05-25 13:32:10,013 [INFO] [Scheduler] Starting task execution...
+2026-05-25 13:32:10,013 [INFO] [Thread-A] Task Started. Calculating... (20%)
+2026-05-25 13:32:10,064 [INFO] [Thread-A] Calculating... (40%)
+2026-05-25 13:32:10,116 [INFO] [Thread-A] Calculating... (60%)
+2026-05-25 13:32:10,167 [INFO] [Thread-A] Calculating... (80%)
+2026-05-25 13:32:10,218 [INFO] [Thread-A] Task Completed. (100%)
+2026-05-25 13:32:10,269 [INFO] [Thread-B] Task Started. Calculating... (20%)
+2026-05-25 13:32:10,321 [INFO] [Thread-B] Calculating... (40%)
+2026-05-25 13:32:10,372 [INFO] [Thread-B] Calculating... (60%)
+2026-05-25 13:32:10,424 [INFO] [Thread-B] Calculating... (80%)
+2026-05-25 13:32:10,475 [INFO] [Thread-B] Task Completed. (100%)
+2026-05-25 13:32:10,527 [INFO] [Thread-C] Task Started. Calculating... (20%)
+2026-05-25 13:32:10,579 [INFO] [Thread-C] Calculating... (40%)
+2026-05-25 13:32:10,630 [INFO] [Thread-C] Calculating... (60%)
+2026-05-25 13:32:10,682 [INFO] [Thread-C] Calculating... (80%)
+2026-05-25 13:32:10,733 [INFO] [Thread-C] Task Completed. (100%)
+2026-05-25 13:32:10,785 [INFO] [Scheduler] All tasks completed.
+2026-05-25 13:32:10,805 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-05-25 13:32:10,805 [INFO] [CpuWorker] Started. Maximum CPU Limit: 10%
+2026-05-25 13:32:10,805 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:32:13,846 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-05-25 13:32:13,910 [INFO] [CpuWorker] Current Load: 6.27%
+2026-05-25 13:32:16,013 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:32:16,885 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-05-25 13:32:17,015 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:32:19,925 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-05-25 13:32:20,120 [INFO] [CpuWorker] Current Load: 8.85%
+2026-05-25 13:32:22,225 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:32:22,967 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-05-25 13:32:23,227 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:32:25,331 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:32:26,009 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-05-25 13:32:26,333 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:32:29,048 [INFO] [MemoryWorker] Current Heap: 175MB
+2026-05-25 13:32:29,437 [INFO] [CpuWorker] Current Load: 6.62%
+2026-05-25 13:32:32,087 [INFO] [MemoryWorker] Current Heap: 200MB
+2026-05-25 13:32:32,543 [INFO] [CpuWorker] Current Load: 6.50%
+2026-05-25 13:32:34,648 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:32:35,127 [INFO] [MemoryWorker] Current Heap: 225MB
+2026-05-25 13:32:35,650 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:32:38,168 [INFO] [MemoryWorker] Current Heap: 250MB
+2026-05-25 13:32:38,756 [INFO] [CpuWorker] Current Load: 9.68%
+2026-05-25 13:32:40,858 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:32:41,210 [INFO] [MemoryWorker] Current Heap: 275MB
+2026-05-25 13:32:41,860 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:32:43,963 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:32:44,249 [INFO] [MemoryWorker] Current Heap: 300MB
+2026-05-25 13:32:44,966 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:32:47,291 [INFO] [MemoryWorker] Current Heap: 325MB
+2026-05-25 13:32:48,071 [INFO] [CpuWorker] Current Load: 6.12%
+2026-05-25 13:32:50,180 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:32:50,298 [INFO] [MemoryWorker] Current Heap: 350MB
+2026-05-25 13:32:51,182 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:32:53,284 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:32:53,310 [INFO] [MemoryWorker] Current Heap: 375MB
+2026-05-25 13:32:54,286 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:32:56,352 [INFO] [MemoryWorker] Current Heap: 400MB
+2026-05-25 13:32:56,390 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:32:57,392 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:32:59,392 [INFO] [MemoryWorker] Current Heap: 425MB
+2026-05-25 13:33:00,496 [INFO] [CpuWorker] Current Load: 8.36%
+2026-05-25 13:33:02,430 [INFO] [MemoryWorker] Current Heap: 450MB
+2026-05-25 13:33:02,600 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:33:03,602 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:33:05,471 [INFO] [MemoryWorker] Current Heap: 475MB
+2026-05-25 13:33:05,706 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:33:06,708 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:33:08,512 [INFO] [MemoryWorker] Current Heap: 500MB
+2026-05-25 13:33:09,814 [INFO] [CpuWorker] Current Load: 6.98%
+2026-05-25 13:33:11,553 [INFO] [MemoryWorker] Current Heap: 525MB
+2026-05-25 13:33:11,553 [WARNING] [MemoryWorker] Memory Usage Reached Limit (525MB). Starting cleanup...
+2026-05-25 13:33:11,563 [INFO] [System] Memory Cache Flushed. Process Stabilized.
+
+>>> [SYSTEM] MEMORY RECOVERED (Cache Cleared) <<<
+
+2026-05-25 13:33:11,918 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:33:12,919 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:33:15,022 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:33:16,024 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:33:16,573 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-05-25 13:33:19,130 [INFO] [CpuWorker] Current Load: 7.35%
+2026-05-25 13:33:19,582 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-05-25 13:33:22,234 [INFO] [CpuWorker] Current Load: 6.06%
+2026-05-25 13:33:22,657 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-05-25 13:33:24,339 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:33:25,341 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:33:25,697 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-05-25 13:33:27,446 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:33:28,447 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:33:28,738 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-05-25 13:33:31,552 [INFO] [CpuWorker] Current Load: 9.48%
+2026-05-25 13:33:31,775 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-05-25 13:33:33,656 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-05-25 13:33:34,661 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 13:33:34,779 [INFO] [MemoryWorker] Current Heap: 175MB
+2026-05-25 13:33:37,766 [INFO] [CpuWorker] Current Load: 8.97%
+2026-05-25 13:33:37,804 [INFO] [MemoryWorker] Current Heap: 200MB
+2026-05-25 13:33:39,870 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-05-25 13:33:40,844 [INFO] [MemoryWorker] Current Heap: 225MB
+2026-05-25 13:33:40,871 [INFO] [CpuWorker] Current Load: 10.00%
+2026-05-25 13:33:43,886 [INFO] [MemoryWorker] Current Heap: 250MB
+2026-05-25 13:33:43,973 [INFO] [CpuWorker] Current Load: 8.67%
+^C2026-05-25 13:33:45,325 [INFO] User interrupted process. Shutting down gracefully...
+```
+<br>
+
+2차 시도 (CPU_MAX_OCCUPY = 95)
+```bash
+agent-admin@c37974f555e9:~$ export MULTI_THREAD_ENABLE=0
+agent-admin@c37974f555e9:~$ export CPU_MAX_OCCUPY=95
+agent-admin@c37974f555e9:~$ /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'agent-admin' (uid=1001)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [OK]
+   ... Log directory is writable: /var/log/agent-app
+[6/6] Verifying Mission Environment       [OK]
+   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=95%, MULTI_THREAD_ENABLE=False
+------------------------------------------------------------
+All Boot Checks Passed!
+Agent READY
+2026-05-25 14:14:14,387 [INFO] [SafetyGuard] Process priority lowered (nice=10).
+2026-05-25 14:14:14,388 [INFO] Agent listening at port 15034
+
+==================================================
+ [ Agent Initiate ] Resource Check 
+==================================================
+ [ MEMORY ] Limit: 512MB 		[ OK ]
+ [ CPU    ] Limit: 95%  		[ WARNING: Recommend Under 50% ]
+ [ THREAD ] Concurrency: False 		[ OK ]
+--------------------------------------------------
+ >>> SYSTEM STATUS: STABLE. STARTING WORKLOAD MONITORING...
+==================================================
+
+2026-05-25 14:14:16,389 [INFO] [CpuWorker] Started. Maximum CPU Limit: 95%
+2026-05-25 14:14:16,390 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 14:14:19,495 [INFO] [CpuWorker] Current Load: 11.96%
+2026-05-25 14:14:22,601 [INFO] [CpuWorker] Current Load: 14.76%
+2026-05-25 14:14:25,707 [INFO] [CpuWorker] Current Load: 16.52%
+2026-05-25 14:14:28,812 [INFO] [CpuWorker] Current Load: 21.84%
+2026-05-25 14:14:31,917 [INFO] [CpuWorker] Current Load: 30.88%
+2026-05-25 14:14:35,023 [INFO] [CpuWorker] Current Load: 34.50%
+2026-05-25 14:14:38,128 [INFO] [CpuWorker] Current Load: 44.40%
+2026-05-25 14:14:41,233 [INFO] [CpuWorker] Current Load: 44.92%
+2026-05-25 14:14:44,337 [INFO] [CpuWorker] Current Load: 48.90%
+2026-05-25 14:14:47,442 [INFO] [CpuWorker] Current Load: 58.42%
+2026-05-25 14:14:47,544 [CRITICAL] [CpuWorker] CPU Threshold Violated! (58.42%).
+
+>>> [SYSTEM] WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) <<<
+
+Terminated
+```
+<br>
+
+#### 2-2-2. [Bug] CPU 과점유에 의한 Watchdog 보호 조치 프로세스 강제 종료
+##### 1. Description (현상 설명)
+단일 스레드 모드(MULTI_THREAD_ENABLE=False) 상태에서 CPU_MAX_OCCUPY=95 설정을 적용하고 agent-app-leak을 실행한 결과,
+내부 부하가 선형적으로 상승하였으며, CPU 점유율이 CPU Threshold를 초과한 순간 
+WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) 메시지를 출력하며 프로세스가 강제 종료(Terminated)되었음 
+
+##### 2. Evidence & Logs (증거 자료)
+프로그램 실행 로그
+```bash
+2026-05-25 14:14:16,389 [INFO] [CpuWorker] Started. Maximum CPU Limit: 95%
+2026-05-25 14:14:16,390 [INFO] [CpuWorker] Current Load: 5.00%
+2026-05-25 14:14:19,495 [INFO] [CpuWorker] Current Load: 11.96%
+2026-05-25 14:14:22,601 [INFO] [CpuWorker] Current Load: 14.76%
+2026-05-25 14:14:25,707 [INFO] [CpuWorker] Current Load: 16.52%
+2026-05-25 14:14:28,812 [INFO] [CpuWorker] Current Load: 21.84%
+2026-05-25 14:14:31,917 [INFO] [CpuWorker] Current Load: 30.88%
+2026-05-25 14:14:35,023 [INFO] [CpuWorker] Current Load: 34.50%
+2026-05-25 14:14:38,128 [INFO] [CpuWorker] Current Load: 44.40%
+2026-05-25 14:14:41,233 [INFO] [CpuWorker] Current Load: 44.92%
+2026-05-25 14:14:44,337 [INFO] [CpuWorker] Current Load: 48.90%
+2026-05-25 14:14:47,442 [INFO] [CpuWorker] Current Load: 58.42%
+2026-05-25 14:14:47,544 [CRITICAL] [CpuWorker] CPU Threshold Violated! (58.42%).
+
+>>> [SYSTEM] WATCHDOG: INITIATING EMERGENCY ABORT (SIGTERM) <<<
+
+Terminated
+```
+
+<br>
+
+관제 모니터링 시스템(monitor.sh) 수집 로그
+```bash
+agent-admin@c37974f555e9:~$ /home/agent-admin/agent-app/bin/monitor.sh
+========================================
+Monitor Start: 2026-05-25 15:27:08
+Target Process: agent-app-leak
+========================================
+[2026-05-25 15:27:08] PROCESS:agent-app-leak STATUS:NOT_FOUND
+[2026-05-25 15:27:11] PID:27246 CPU:4.6% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:15] PID:27246 CPU:2.1% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:18] PID:27246 CPU:1.3% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:21] PID:27246 CPU:1.0% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:24] PID:27246 CPU:0.8% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:27] PID:27246 CPU:0.6% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:30] PID:27246 CPU:0.5% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:33] PID:27246 CPU:0.5% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:36] PID:27246 CPU:0.4% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:39] PID:27246 CPU:0.4% MEM:0.0% RSS:2172KB
+[2026-05-25 15:27:42] PROCESS:agent-app-leak STATUS:NOT_FOUND
+[2026-05-25 15:27:45] PROCESS:agent-app-leak STATUS:NOT_FOUND
+```
+
+<br>
+
+```bash
+agent-admin@c37974f555e9:~$ top -bn1 | grep agent
+     18 agent-a+  20   0    5024    696      4 S   0.0   0.0   0:00.00 bash
+  27058 agent-a+  20   0    5024   2836   2160 S   0.0   0.0   0:00.01 bash
+  27753 agent-a+  20   0    5024   3048   2364 S   0.0   0.0   0:00.00 bash
+  28075 agent-a+  20   0    2904   2140   1904 S   0.0   0.0   0:00.09 agent-a+
+  28076 agent-a+  30  10   27092  21628  11788 S   0.0   0.1   0:00.17 agent-a+
+  28079 agent-a+  20   0    9288   5320   3164 R   0.0   0.0   0:00.00 top
+  28080 agent-a+  20   0    3964   2316   2128 S   0.0   0.0   0:00.00 grep
+
+agent-admin@c37974f555e9:~$ ps aux | grep agent-app
+agent-a+   28075  0.2  0.0   2904  2140 pts/2    S+   15:55   0:00 /usr/local/bin/agent-app-leak
+agent-a+   28076  0.8  0.1  27092 18960 pts/2    SN+  15:55   0:00 /usr/local/bin/agent-app-leak
+agent-a+   28082  0.0  0.0   4096  2164 pts/3    S+   15:56   0:00 grep --color=auto agent-app 
+
+op - 16:00:54 up  7:42,  0 user,  load average: 0.00, 0.00, 0.00
+Tasks:   0 total,   0 running,   0 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem :  16049.5 total,  15518.2 free,    606.2 used,    189.6 buff/cache    
+MiB Swap:  17073.5 total,  17073.5 free,      0.0 used.  15443.3 avail Mem 
+```
+<br>
+
+##### 3. Root Cause Analysis (원인 분석)
+CPU 부하가 내부 Watchdog 임계치를 초과한 원인 분석 <br>
+CpuWorker가 시스템 전체 CPU 부하를 지속적으로 상승시키도록 설계되어 있고 <br>
+설정된 임계값(CPU_MAX_OCCUPY=95%)보다 낮은 50% 시점에서 Watchdog이 SIGTERM을 발생시켜 프로세스를 강제 종료함  <br>
+
+<br>
+
+##### 4. Workarund & Verification (조치 및 검증)
+CPU_MAX_OCCUPY = 10으로 설정했더니 프로세스가 내부 스케줄링 지연(Latency)을 겪기 전에 안전하게 쿨다운 루틴에 진입함 <br>
+
+<br>
 
 ### 2-3. Deadlock
 #### 2-3-1. 실행 로그 
