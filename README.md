@@ -435,9 +435,7 @@ CPU_MAX_OCCUPY = 10으로 설정했더니 프로세스가 내부 스케줄링 �
 
 싱글 스레드 모드 
 ```bash 
-agent-admin@c37974f555e9:~$ export MULTI_THREAD_ENABLE=0
-agent-admin@c37974f555e9:~$ export MEMORY_LIMIT=512
-agent-admin@c37974f555e9:~$ /usr/local/bin/agent-app-leak
+gent-admin@0eee44afb63a:/$ /usr/local/bin/agent-app-leak
 >>> Starting Agent Boot Sequence...
 [1/6] Checking User Account               [OK]
    ... Running as service user 'agent-admin' (uid=1001)
@@ -450,110 +448,56 @@ agent-admin@c37974f555e9:~$ /usr/local/bin/agent-app-leak
 [5/6] Verifying Log Permission            [OK]
    ... Log directory is writable: /var/log/agent-app
 [6/6] Verifying Mission Environment       [OK]
-   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=20%, MULTI_THREAD_ENABLE=False
+   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=10%, MULTI_THREAD_ENABLE=False
 ------------------------------------------------------------
 All Boot Checks Passed!
 Agent READY
-2026-05-25 11:13:34,929 [INFO] [SafetyGuard] Process priority lowered (nice=10).
-2026-05-25 11:13:34,929 [INFO] Agent listening at port 15034
+2026-06-26 12:36:37,142 [INFO] [SafetyGuard] Process priority lowered (nice=10).
+2026-06-26 12:36:37,143 [INFO] Agent listening at port 15034
 
 ==================================================
  [ Agent Initiate ] Resource Check 
 ==================================================
  [ MEMORY ] Limit: 512MB 		[ OK ]
- [ CPU    ] Limit: 20%  		[ OK ]
+ [ CPU    ] Limit: 10%  		[ OK ]
  [ THREAD ] Concurrency: False 		[ OK ]
 --------------------------------------------------
  >>> SYSTEM STATUS: STABLE. STARTING WORKLOAD MONITORING...
 ==================================================
 
-2026-05-25 11:13:36,932 [INFO] >>> Scenario Selected: [Healthy System Monitoring]
+2026-06-26 12:36:39,144 [INFO] >>> Scenario Selected: [Healthy System Monitoring]
 
 >>> [SYSTEM] ALL CONFIGURATIONS OPTIMAL. RUNNING STABILITY TEST... <<<
 
-2026-05-25 11:13:36,932 [INFO] [Scheduler] Task Scheduler Initialized.
-2026-05-25 11:13:36,933 [INFO] [Scheduler] Registered Tasks: ['Thread-A', 'Thread-B', 'Thread-C']
-2026-05-25 11:13:36,933 [INFO] [Scheduler] Starting task execution...
-2026-05-25 11:13:36,933 [INFO] [Thread-A] Task Started. Calculating... (20%)
-2026-05-25 11:13:36,984 [INFO] [Thread-A] Calculating... (40%)
-2026-05-25 11:13:37,035 [INFO] [Thread-A] Calculating... (60%)
-2026-05-25 11:13:37,086 [INFO] [Thread-A] Calculating... (80%)
-2026-05-25 11:13:37,136 [INFO] [Thread-A] Task Completed. (100%)
-2026-05-25 11:13:37,187 [INFO] [Thread-B] Task Started. Calculating... (20%)
-2026-05-25 11:13:37,239 [INFO] [Thread-B] Calculating... (40%)
-2026-05-25 11:13:37,290 [INFO] [Thread-B] Calculating... (60%)
-2026-05-25 11:13:37,341 [INFO] [Thread-B] Calculating... (80%)
-2026-05-25 11:13:37,393 [INFO] [Thread-B] Task Completed. (100%)
-2026-05-25 11:13:37,445 [INFO] [Thread-C] Task Started. Calculating... (20%)
-2026-05-25 11:13:37,496 [INFO] [Thread-C] Calculating... (40%)
-2026-05-25 11:13:37,548 [INFO] [Thread-C] Calculating... (60%)
-2026-05-25 11:13:37,600 [INFO] [Thread-C] Calculating... (80%)
-2026-05-25 11:13:37,651 [INFO] [Thread-C] Task Completed. (100%)
-2026-05-25 11:13:37,701 [INFO] [Scheduler] All tasks completed.
-2026-05-25 11:13:37,729 [INFO] [MemoryWorker] Current Heap: 25MB
-2026-05-25 11:13:37,729 [INFO] [CpuWorker] Started. Maximum CPU Limit: 20%
-2026-05-25 11:13:37,729 [INFO] [CpuWorker] Current Load: 5.00%
-2026-05-25 11:13:40,771 [INFO] [MemoryWorker] Current Heap: 50MB
-2026-05-25 11:13:40,834 [INFO] [CpuWorker] Current Load: 8.81%
-2026-05-25 11:13:43,809 [INFO] [MemoryWorker] Current Heap: 75MB
-2026-05-25 11:13:43,936 [INFO] [CpuWorker] Current Load: 12.27%
-2026-05-25 11:13:46,849 [INFO] [MemoryWorker] Current Heap: 100MB
-2026-05-25 11:13:47,043 [INFO] [CpuWorker] Current Load: 12.91%
-2026-05-25 11:13:49,890 [INFO] [MemoryWorker] Current Heap: 125MB
-2026-05-25 11:13:50,148 [INFO] [CpuWorker] Current Load: 18.54%
-2026-05-25 11:13:52,251 [INFO] [CpuWorker] Peak reached (20.00%). Starting cooldown...
-2026-05-25 11:13:52,930 [INFO] [MemoryWorker] Current Heap: 150MB
-2026-05-25 11:13:53,253 [INFO] [CpuWorker] Current Load: 20.00%
-2026-05-25 11:13:55,969 [INFO] [MemoryWorker] Current Heap: 175MB
-2026-05-25 11:13:56,359 [INFO] [CpuWorker] Current Load: 17.60%
-2026-05-25 11:13:59,009 [INFO] [MemoryWorker] Current Heap: 200MB
-2026-05-25 11:13:59,465 [INFO] [CpuWorker] Current Load: 16.33%
-2026-05-25 11:14:02,050 [INFO] [MemoryWorker] Current Heap: 225MB
-2026-05-25 11:14:02,570 [INFO] [CpuWorker] Current Load: 13.67%
-2026-05-25 11:14:05,057 [INFO] [MemoryWorker] Current Heap: 250MB
-2026-05-25 11:14:05,675 [INFO] [CpuWorker] Current Load: 9.63%
-2026-05-25 11:14:08,064 [INFO] [MemoryWorker] Current Heap: 275MB
-2026-05-25 11:14:08,781 [INFO] [CpuWorker] Current Load: 6.65%
-2026-05-25 11:14:10,885 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
-2026-05-25 11:14:11,072 [INFO] [MemoryWorker] Current Heap: 300MB
-2026-05-25 11:14:11,886 [INFO] [CpuWorker] Current Load: 5.00%
-2026-05-25 11:14:14,106 [INFO] [MemoryWorker] Current Heap: 325MB
-2026-05-25 11:14:14,992 [INFO] [CpuWorker] Current Load: 6.53%
-2026-05-25 11:14:17,146 [INFO] [MemoryWorker] Current Heap: 350MB
-2026-05-25 11:14:18,098 [INFO] [CpuWorker] Current Load: 14.77%
-2026-05-25 11:14:20,187 [INFO] [MemoryWorker] Current Heap: 375MB
-2026-05-25 11:14:20,200 [INFO] [CpuWorker] Peak reached (20.00%). Starting cooldown...
-2026-05-25 11:14:21,201 [INFO] [CpuWorker] Current Load: 20.00%
-2026-05-25 11:14:23,223 [INFO] [MemoryWorker] Current Heap: 400MB
-2026-05-25 11:14:24,306 [INFO] [CpuWorker] Current Load: 19.82%
-2026-05-25 11:14:26,263 [INFO] [MemoryWorker] Current Heap: 425MB
-2026-05-25 11:14:27,411 [INFO] [CpuWorker] Current Load: 10.87%
-2026-05-25 11:14:29,303 [INFO] [MemoryWorker] Current Heap: 450MB
-2026-05-25 11:14:30,517 [INFO] [CpuWorker] Current Load: 6.24%
-2026-05-25 11:14:32,343 [INFO] [MemoryWorker] Current Heap: 475MB
-2026-05-25 11:14:32,621 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
-2026-05-25 11:14:33,623 [INFO] [CpuWorker] Current Load: 5.00%
-2026-05-25 11:14:35,385 [INFO] [MemoryWorker] Current Heap: 500MB
-2026-05-25 11:14:36,728 [INFO] [CpuWorker] Current Load: 5.07%
-2026-05-25 11:14:38,424 [INFO] [MemoryWorker] Current Heap: 525MB
-2026-05-25 11:14:38,425 [WARNING] [MemoryWorker] Memory Usage Reached Limit (525MB). Starting cleanup...
-2026-05-25 11:14:38,434 [INFO] [System] Memory Cache Flushed. Process Stabilized.
-
->>> [SYSTEM] MEMORY RECOVERED (Cache Cleared) <<<
-
-2026-05-25 11:14:39,834 [INFO] [CpuWorker] Current Load: 6.60%
-2026-05-25 11:14:42,940 [INFO] [CpuWorker] Current Load: 11.52%
-2026-05-25 11:14:43,442 [INFO] [MemoryWorker] Current Heap: 25MB
-2026-05-25 11:14:46,046 [INFO] [CpuWorker] Current Load: 18.32%
-2026-05-25 11:14:46,451 [INFO] [MemoryWorker] Current Heap: 50MB
-2026-05-25 11:14:48,151 [INFO] [CpuWorker] Peak reached (20.00%). Starting cooldown...
-2026-05-25 11:14:49,152 [INFO] [CpuWorker] Current Load: 20.00%
-2026-05-25 11:14:49,460 [INFO] [MemoryWorker] Current Heap: 75MB
-2026-05-25 11:14:52,258 [INFO] [CpuWorker] Current Load: 18.22%
-2026-05-25 11:14:52,468 [INFO] [MemoryWorker] Current Heap: 100MB
-2026-05-25 11:14:55,363 [INFO] [CpuWorker] Current Load: 12.16%
-2026-05-25 11:14:55,509 [INFO] [MemoryWorker] Current Heap: 125MB
-2026-05-25 11:14:57,467 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-06-26 12:36:39,144 [INFO] [Scheduler] Task Scheduler Initialized.
+2026-06-26 12:36:39,144 [INFO] [Scheduler] Registered Tasks: ['Thread-A', 'Thread-B', 'Thread-C']
+2026-06-26 12:36:39,145 [INFO] [Scheduler] Starting task execution...
+2026-06-26 12:36:39,145 [INFO] [Thread-B] Task Started. Calculating... (20%)
+2026-06-26 12:36:39,196 [INFO] [Thread-B] Calculating... (40%)
+2026-06-26 12:36:39,248 [INFO] [Thread-B] Calculating... (60%)
+2026-06-26 12:36:39,299 [INFO] [Thread-B] Calculating... (80%)
+2026-06-26 12:36:39,350 [INFO] [Thread-B] Task Completed. (100%)
+2026-06-26 12:36:39,401 [INFO] [Thread-C] Task Started. Calculating... (20%)
+2026-06-26 12:36:39,452 [INFO] [Thread-C] Calculating... (40%)
+2026-06-26 12:36:39,503 [INFO] [Thread-C] Calculating... (60%)
+2026-06-26 12:36:39,554 [INFO] [Thread-C] Calculating... (80%)
+2026-06-26 12:36:39,606 [INFO] [Thread-C] Task Completed. (100%)
+2026-06-26 12:36:39,656 [INFO] [Thread-A] Task Started. Calculating... (20%)
+2026-06-26 12:36:39,708 [INFO] [Thread-A] Calculating... (40%)
+2026-06-26 12:36:39,759 [INFO] [Thread-A] Calculating... (60%)
+2026-06-26 12:36:39,810 [INFO] [Thread-A] Calculating... (80%)
+2026-06-26 12:36:39,862 [INFO] [Thread-A] Task Completed. (100%)
+2026-06-26 12:36:39,913 [INFO] [Scheduler] All tasks completed.
+2026-06-26 12:36:39,941 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-06-26 12:36:39,941 [INFO] [CpuWorker] Started. Maximum CPU Limit: 10%
+2026-06-26 12:36:39,941 [INFO] [CpuWorker] Current Load: 5.00%
+2026-06-26 12:36:42,043 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
+2026-06-26 12:36:42,969 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-06-26 12:36:43,044 [INFO] [CpuWorker] Current Load: 10.00%
+2026-06-26 12:36:45,146 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-06-26 12:36:45,998 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-06-26 12:36:46,147 [INFO] [CpuWorker] Current Load: 5.00%
+2026-06-26 12:36:48,249 [INFO] [CpuWorker] Peak reached (10.00%). Starting cooldown...
 ```
 <br>
 
@@ -713,6 +657,41 @@ MULTI_THREAD_ENABLE=False로 설정하여 단일 스레드 방식으로 동작�
 그 결과, 태스크 스케줄러가 등록된 작업들(Thread-A, Thread-B, Thread-C)을 순차적으로 호출하여 모두 안전하게 완료(100% Task Completed)함 <br>
 Heap 메모리가 설정된 임계치 부근인 525MB까지 상승했으나, 애플리케이션 내부 메모리 보호 정책 [MemoryWorker]이 정상 작동하여 <br>
 Memory Usage Reached Limit. Starting cleanup... 로그와 함께 캐시를 비워냄(Current Heap을 25MB로) <br>
+<br>
+
+### 2-4. 스케줄링 알고리즘 추론
+#### 1. 로그 관찰 개요
+'agent-app-leak'가 정상적으로 실행될 때(MEMORY_LIMIT=512, CPU_MAX_OCCUPY = 10, MULTI_THREAD_ENABLE=0) 스레드들이 처리되는 순서를 관찰함 
+<br>
+
+#### 2. 증거 자료
+```bash
+2026-06-26 12:40:35,467 [INFO] [Scheduler] Registered Tasks: ['Thread-A', 'Thread-B', 'Thread-C']
+2026-06-26 12:40:35,468 [INFO] [Scheduler] Starting task execution...
+2026-06-26 12:40:35,468 [INFO] [Thread-B] Task Started. Calculating... (20%)
+2026-06-26 12:40:35,518 [INFO] [Thread-B] Calculating... (40%)
+2026-06-26 12:40:35,569 [INFO] [Thread-B] Calculating... (60%)
+2026-06-26 12:40:35,619 [INFO] [Thread-B] Calculating... (80%)
+2026-06-26 12:40:35,670 [INFO] [Thread-B] Task Completed. (100%)
+2026-06-26 12:40:35,721 [INFO] [Thread-C] Task Started. Calculating... (20%)
+2026-06-26 12:40:35,771 [INFO] [Thread-C] Calculating... (40%)
+2026-06-26 12:40:35,822 [INFO] [Thread-C] Calculating... (60%)
+2026-06-26 12:40:35,873 [INFO] [Thread-C] Calculating... (80%)
+2026-06-26 12:40:35,924 [INFO] [Thread-C] Task Completed. (100%)
+2026-06-26 12:40:35,975 [INFO] [Thread-A] Task Started. Calculating... (20%)
+2026-06-26 12:40:36,027 [INFO] [Thread-A] Calculating... (40%)
+2026-06-26 12:40:36,078 [INFO] [Thread-A] Calculating... (60%)
+2026-06-26 12:40:36,129 [INFO] [Thread-A] Calculating... (80%)
+2026-06-26 12:40:36,179 [INFO] [Thread-A] Task Completed. (100%)
+2026-06-26 12:40:36,229 [INFO] [Scheduler] All tasks completed.
+```
+<br>
+
+#### 3. 패턴 분석 및 결론
+큐에 등록된 순서를 A -> B -> C 라고 본다면, FCFS일 경우 A -> B -> C 로 처리되어야 하나, B -> C -> A 로 처리되고 있음 <br>
+라운드 로빈은 할당된 시간 동안만 번갈아가면서 작업을 하는 방식인데, 한 스레드가 시작되면 100%가 될 때까지 쭉 실행하고 있음. <br>
+그리고 매번 실행을 할 때마다 B -> C -> A 로 처리되는 것으로 보아 내부에서 우선순위가 B -> C -> A 로 설정되어 있는 우선순위 스케줄링 방식으로 추론됨.
+<br>
 <br>
 
 ## 3. 수행 방법 
