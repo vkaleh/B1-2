@@ -1,6 +1,16 @@
 #!/bin/bash
 TARGET="agent-app-leak"
 
+LOG_DIR="${AGENT_LOG_DIR:-/var/log/agent-app}"
+LOG_FILE="$LOG_DIR/monitor.log"
+
+mkdir -p "$LOG_DIR"
+
+log "========================================"
+log "Monitor Start: $(date '+%Y-%m-%d %H:%M:%S')"
+log "Target Process: $TARGET"
+log "========================================"
+
 while true; do
     # 1. 현재 날짜와 시간 가져오기 (예: 2026-05-24 14:00:00)
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
