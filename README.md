@@ -746,8 +746,8 @@ while true; do
     # 1. 현재 날짜와 시간 가져오기 (예: 2026-05-24 14:00:00)
     TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
-    # 2. TARGET 프로세스의 PID 가져오기
-    PID=$(pgrep -o -f "/usr/local/bin/$TARGET")
+    # 2. 실행중인 TARGET 프로세스의 PID 가져오기
+    PID=$(pgrep -o -f "/usr/local/bin/$TARGET")   # -oldest 가장 먼저 실행된 프로세스를 지정, -f 전체 실행 경로를 비교하여 오탐을 방지
 
     # 3. PID 존재 여부 체크 및 로그 출력
     if [ ! -z "$PID" ] && [[ "$PID" =~ ^[0-9]+$ ]]; then
@@ -870,3 +870,61 @@ LWP 69, 70번 스레드: PID는 68이지만 LWP 번호가 다름 -> PID 68번이
 자식 스레드(69, 70)를 생성한 주체는 메인 스레드(68)가 맞지만, 리눅스 커널은 이 스레드 집단 전체를 하나의 프로세스(PID 68)로 묶어서 관리함 <br>
 그리고 이 프로세스 집단을 통째로 낳아준 실제 부모 프로세스는 67번임 <br>
 따라서 69번, 70번 스레드 입장에서 '나를 생성한 부모 스레드'는 68번이 맞지만, 시스템 관리 차원에서 '너희 스레드 집단(PID 68)을 태어나게 해준 부모 프로세스(PPID)'는 67임 <br>
+
+### 4-2. monitor.sh 설명
+- ps -p $PID -o %cpu,%mem --no-headers | awk -v t="$TIMESTAMP" -v name="$TARGET"
+  ps -p : 특정 프로세스만 지정해서 조회
+  -o : output format. 사용자가 원하는 출력항목을 직접 지정
+  %cpu, %mem : 실시간 CPU 사용률, 물리 메모리 점유율
+  --no headers : awk 로 데이터를 넘겨줄 때 숫자 데이터만 전달해서 가공하기 쉽도록, 헤더 텍스트가 섞여 들어오는 것을 방지함
+  
+  awk : 추출된 데이터를 원하는 로그 포맷으로 가공 및 정제. awk는 독립적인 별도의 언어 체계를 가지기 때문에, 셸 스크립트의 변수를 직접 가져다 쓸 수 없음. 그래서 -v(variable) 옵션을 사용해 외부 데이터를 awk 내부로 수송해 줘야 함.
+  -v name="$TARGET": 셸 스크립트의 $TARGET 변수(프로세스 이름인 agent-app-leak)를 awk 내부에서 사용할 내부 변수 name에 할당함
+
+### 4-3. 메모리 보호 정책에 따른 프로세스 강제 종료 원인
+시스템의 메모리 보호 정책이 특정 프로세스를 강제 종료(Kill)하는 이유는 단일 프로세스의 자원 독점(메모리 누수)으로부터 운영체제(OS) 전체의 가용성과 안정성을 방어하기 위함
+
+2-1-1. OOM Crash를 보면 
+```bash
+2026-05-24 13:59:35,651 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-05-24 13:59:38,692 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-05-24 13:59:41,730 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-05-24 13:59:41,730 [CRITICAL] [MemoryGuard] Memory limit exceeded (75MB >= 60MB) / (Recommend Over 256MB)
+2026-05-24 13:59:41,730 [CRITICAL] [MemoryGuard] Self-terminating process 3501 to prevent system instability.
+
+
+>>> [SYSTEM] SELF-TERMINATED (Memory Limit Exceeded) <<<
+
+Killed
+```
+
+프로세스 내부의 메모리 감시 장치(MemoryGuard)가 시스템 전체가 먹통이 되는 현상(System Instability)을 방지하기 위해 프로세스 스스로 종료 신호를 보내는 Self-terminating process 3501 프로세스를 제어함 
+<br>
+
+이후, 운영체제(OS) 커널의 메모리 보호 정책에 의해 메인 터미널에 Killed 메시지가 출력되고 프로세스가 강제 종료됨 
+<br>
+
+강제 종료를 하는 이유에는
+<br>
+- 시스템 전체가 중단되는 것을 방지(커널 패닉 예방) : 특정 프로세스가 메모리를 계속 잠식하면, 운영체제는 부족한 물리 메모리를 보완하기 위해 디스크 공간을 메모리처럼 쓰는 스왑 연산을 반복하게 됨. 그렇게 되면 시스템 전반의 I/O 병목과 급격한 성능 저하(Thrashing)를 유발하여, 커널 전체가 멈추는 Kernel Panic을 유발할 수 있으므로, 자원 과다 소비 프로세스를 사전에 차단함
+- 커널 자폭 방지 : 리눅스 커널은 메모리가 고갈되면 시스템 유지를 위해 다른 정상적인 핵심 프로세스 (SSH, 웹 서버 등)까지 강제로 종료(OOM Killer)시키는 연쇄 장애를 일으킬 수 있음. 그래서 자원 폭증의 원인이 되는 프로세스만 타겟팅하여 격리 및 종료함
+
+### 4-4. 시스템 안정성 확보를 위한 모니터링 및 코드 개선 방안
+- 가장 치명적인 장애 : 선형적 메모리 누수(Memory Leak)로 인한 OOM
+시스템에서 가장 치명적인 장애는 메모리 누수임. 데드락(Deadlock)은 해당 스레드만 멈추거나 타임아웃 처리가 가능하지만, 메모리 누수는 가용한 모든 RAM을 잠식하여 시스템 전체를 다운시키는 '커널 패닉'과 타 서비스까지 강제 종료시키는 'OOM Killer'를 유발하기 때문에 파급력이 가장 큼.
+
+- 근본적인 예방을 위한 monitor.sh 개선 (장애 발생 전 임계치 기반 알람)
+현재 스크립트는 임계치를 넘으면 사후 종료만 수행함. 장애 발생 전에 이를 탐지하기 위해 메모리 증가 기울기(Velocity) 탐지 및 2단계 경고(Warning/Critical) 체계로 개선하는 방법이 있음. 
+
+```bash
+# monitor.sh 개선 핵심 로직 (예시)
+PREV_MEM=0
+WARN_LIMIT=50   # 50% 도달 시 경고
+CRIT_LIMIT=80   # 80% 도달 시 차단
+
+# 루프 내부 메커니즘 개선
+if [ "$CURR_MEM" -gt "$WARN_LIMIT" ]; then
+    # 장애 발생 전 슬랙(Slack) 이메일 등으로 시스템 관리자에게 사전 경고 발송
+    send_alert "WARNING: 프로세스 메모리 급증 탐지 ($CURR_MEM%)"
+fi
+```
