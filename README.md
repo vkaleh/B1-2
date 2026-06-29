@@ -49,9 +49,10 @@ Killed
 ```
 <br>
 
-2차 (MEMORY_LIMIT=120)
+2차 (MEMORY_LIMIT=512)
 ```bash
-agent-admin@415865874d7f:~$ /usr/local/bin/agent-app-leak
+gent-admin@23be53df95b1:~$ export MEMORY_LIMIT=512
+agent-admin@23be53df95b1:~$ /usr/local/bin/agent-app-leak
 >>> Starting Agent Boot Sequence...
 [1/6] Checking User Account               [OK]
    ... Running as service user 'agent-admin' (uid=1001)
@@ -64,35 +65,70 @@ agent-admin@415865874d7f:~$ /usr/local/bin/agent-app-leak
 [5/6] Verifying Log Permission            [OK]
    ... Log directory is writable: /var/log/agent-app
 [6/6] Verifying Mission Environment       [OK]
-   ... MEMORY_LIMIT=120MB, CPU_MAX_OCCUPY=20%, MULTI_THREAD_ENABLE=False
+   ... MEMORY_LIMIT=512MB, CPU_MAX_OCCUPY=20%, MULTI_THREAD_ENABLE=False
 ------------------------------------------------------------
 All Boot Checks Passed!
 Agent READY
-2026-05-24 14:50:02,660 [INFO] [SafetyGuard] Process priority lowered (nice=10).
-2026-05-24 14:50:02,661 [INFO] Agent listening at port 15034
+2026-06-29 10:25:20,530 [INFO] [SafetyGuard] Process priority lowered (nice=10).
+2026-06-29 10:25:20,530 [INFO] Agent listening at port 15034
 
 ==================================================
  [ Agent Initiate ] Resource Check 
 ==================================================
- [ MEMORY ] Limit: 120MB 		[ WARNING: Recommend Over 256MB ]
+ [ MEMORY ] Limit: 512MB 		[ OK ]
  [ CPU    ] Limit: 20%  		[ OK ]
  [ THREAD ] Concurrency: False 		[ OK ]
 --------------------------------------------------
  >>> SYSTEM STATUS: STABLE. STARTING WORKLOAD MONITORING...
 ==================================================
 
-2026-05-24 14:50:04,701 [INFO] [MemoryWorker] Current Heap: 25MB
-2026-05-24 14:50:07,743 [INFO] [MemoryWorker] Current Heap: 50MB
-2026-05-24 14:50:10,785 [INFO] [MemoryWorker] Current Heap: 75MB
-2026-05-24 14:50:13,827 [INFO] [MemoryWorker] Current Heap: 100MB
-2026-05-24 14:50:16,863 [INFO] [MemoryWorker] Current Heap: 125MB
-2026-05-24 14:50:16,864 [CRITICAL] [MemoryGuard] Memory limit exceeded (125MB >= 120MB) / (Recommend Over 256MB)
-2026-05-24 14:50:16,864 [CRITICAL] [MemoryGuard] Self-terminating process 7270 to prevent system instability.
+2026-06-29 10:25:22,531 [INFO] >>> Scenario Selected: [Healthy System Monitoring]
 
+>>> [SYSTEM] ALL CONFIGURATIONS OPTIMAL. RUNNING STABILITY TEST... <<<
 
->>> [SYSTEM] SELF-TERMINATED (Memory Limit Exceeded) <<<
-
-Killed
+2026-06-29 10:25:22,532 [INFO] [Scheduler] Task Scheduler Initialized.
+2026-06-29 10:25:22,532 [INFO] [Scheduler] Registered Tasks: ['Thread-A', 'Thread-B', 'Thread-C']
+2026-06-29 10:25:22,532 [INFO] [Scheduler] Starting task execution...
+2026-06-29 10:25:22,533 [INFO] [Thread-B] Task Started. Calculating... (20%)
+2026-06-29 10:25:22,583 [INFO] [Thread-B] Calculating... (40%)
+2026-06-29 10:25:22,634 [INFO] [Thread-B] Calculating... (60%)
+2026-06-29 10:25:22,685 [INFO] [Thread-B] Calculating... (80%)
+2026-06-29 10:25:22,736 [INFO] [Thread-B] Task Completed. (100%)
+2026-06-29 10:25:22,787 [INFO] [Thread-C] Task Started. Calculating... (20%)
+2026-06-29 10:25:22,838 [INFO] [Thread-C] Calculating... (40%)
+2026-06-29 10:25:22,889 [INFO] [Thread-C] Calculating... (60%)
+2026-06-29 10:25:22,940 [INFO] [Thread-C] Calculating... (80%)
+2026-06-29 10:25:22,991 [INFO] [Thread-C] Task Completed. (100%)
+2026-06-29 10:25:23,042 [INFO] [Thread-A] Task Started. Calculating... (20%)
+2026-06-29 10:25:23,093 [INFO] [Thread-A] Calculating... (40%)
+2026-06-29 10:25:23,144 [INFO] [Thread-A] Calculating... (60%)
+2026-06-29 10:25:23,195 [INFO] [Thread-A] Calculating... (80%)
+2026-06-29 10:25:23,246 [INFO] [Thread-A] Task Completed. (100%)
+2026-06-29 10:25:23,297 [INFO] [Scheduler] All tasks completed.
+2026-06-29 10:25:23,302 [INFO] [MemoryWorker] Current Heap: 25MB
+2026-06-29 10:25:23,302 [INFO] [CpuWorker] Started. Maximum CPU Limit: 20%
+2026-06-29 10:25:23,302 [INFO] [CpuWorker] Current Load: 5.00%
+2026-06-29 10:25:26,308 [INFO] [MemoryWorker] Current Heap: 50MB
+2026-06-29 10:25:26,404 [INFO] [CpuWorker] Current Load: 13.52%
+2026-06-29 10:25:29,317 [INFO] [MemoryWorker] Current Heap: 75MB
+2026-06-29 10:25:29,505 [INFO] [CpuWorker] Current Load: 15.36%
+2026-06-29 10:25:31,607 [INFO] [CpuWorker] Peak reached (20.00%). Starting cooldown...
+2026-06-29 10:25:32,345 [INFO] [MemoryWorker] Current Heap: 100MB
+2026-06-29 10:25:32,607 [INFO] [CpuWorker] Current Load: 20.00%
+2026-06-29 10:25:35,374 [INFO] [MemoryWorker] Current Heap: 125MB
+2026-06-29 10:25:35,708 [INFO] [CpuWorker] Current Load: 12.09%
+2026-06-29 10:25:37,810 [INFO] [CpuWorker] Cooldown complete (5.00%). Resuming load increase...
+2026-06-29 10:25:38,403 [INFO] [MemoryWorker] Current Heap: 150MB
+2026-06-29 10:25:38,811 [INFO] [CpuWorker] Current Load: 5.00%
+2026-06-29 10:25:41,434 [INFO] [MemoryWorker] Current Heap: 175MB
+2026-06-29 10:25:41,913 [INFO] [CpuWorker] Current Load: 7.51%
+2026-06-29 10:25:44,463 [INFO] [MemoryWorker] Current Heap: 200MB
+2026-06-29 10:25:45,014 [INFO] [CpuWorker] Current Load: 15.89%
+2026-06-29 10:25:47,116 [INFO] [CpuWorker] Peak reached (20.00%). Starting cooldown...
+2026-06-29 10:25:47,493 [INFO] [MemoryWorker] Current Heap: 225MB
+2026-06-29 10:25:48,117 [INFO] [CpuWorker] Current Load: 20.00%
+2026-06-29 10:25:50,521 [INFO] [MemoryWorker] Current Heap: 250MB
+...
 ```
 <br>
 
