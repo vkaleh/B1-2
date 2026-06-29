@@ -923,22 +923,13 @@ agent-admin@415865874d7f:~$ /usr/local/bin/agent-app-leak
 ```
 <br>
 
-monitor.log 초기화
-```bash
-root@415865874d7f:/# pkill -f monitor.sh            # 기존에 실행중인 프로세스 종료   
-root@415865874d7f:/# true > /var/log/monitor.log    # 기존 로그 파일 초기화 
-root@415865874d7f:/# cat /var/log/monitor.log       # 아무것도 안 뜨는지 확인 
-```
-<br>
-
 monitor.log 실행
 ```bash
-# 백그라운드에서 감시 스크립트가 돌아가도록 실행
-root@415865874d7f:/# .//home/agent-admin/agent-app/bin/monitor.sh >> /var/log/monitor.log &    
-[1] 7262
+# 새로운 창에서 monitor.sh 실행 
+root@415865874d7f:/# /home/agent-admin/agent-app/bin/monitor.sh
 
-# 실시간으로 쌓이는 로그 확인하려면
-root@415865874d7f:/# tail -f /var/log/monitor.log
+# 실시간으로 쌓이는 로그 확인하려면 (새로운 창에서)
+root@415865874d7f:/# tail -f /var/log/agent-app/monitor.log
 [2026-05-24 14:49:58] PROCESS:agent-app-leak NOT RUNNING
 [2026-05-24 14:50:01] PROCESS:agent-app-leak NOT RUNNING
 [2026-05-24 14:50:04] PROCESS:agent-app-leak CPU:5.1% MEM:0.0% DISK:954G FIREWALL:active    
@@ -1039,3 +1030,11 @@ if [ "$CURR_MEM" -gt "$WARN_LIMIT" ]; then
     send_alert "WARNING: 프로세스 메모리 급증 탐지 ($CURR_MEM%)"
 fi
 ```
+
+### 4-4. monitor.log 초기화 방법 
+```bash
+root@415865874d7f:/# pkill -f monitor.sh            # 기존에 실행중인 프로세스 종료   
+root@415865874d7f:/# true > /var/log/monitor.log    # 기존 로그 파일 초기화 
+root@415865874d7f:/# cat /var/log/monitor.log       # 아무것도 안 뜨는지 확인 
+```
+<br>
