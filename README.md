@@ -696,7 +696,35 @@ Memory Usage Reached Limit. Starting cleanup... 로그와 함께 캐시를 비�
 
 ## 3. 수행 방법 
 
-환경 변수 설정
+### B1-1에서 계정 비밀번호 설정까지 수행 
+<br>
+
+### 실행 권한 부여
+```bash
+root@23be53df95b1:/# /usr/local/bin/agent-app-leak
+bash: /usr/local/bin/agent-app-leak: Permission denied
+root@23be53df95b1:/# ls -la /usr/local/bin/agent-app-leak
+-rw-r--r-- 1 1267600509 1267600509 7931880 Jun 29 08:56 /usr/local/bin/agent-app-leak
+root@23be53df95b1:/# chmod +x /usr/local/bin/agent-app-leak
+root@23be53df95b1:/# /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [FAIL]
+   >>> Error: Running as 'root' is forbidden.
+[2/6] Verifying Environment Variables     [FAIL]
+   >>> Skipped due to previous critical failure.
+[3/6] Checking Required Files             [FAIL]
+   >>> Skipped due to previous critical failure.
+[4/6] Checking Port Availability          [FAIL]
+   >>> Skipped due to previous critical failure.
+[5/6] Verifying Log Permission            [FAIL]
+   >>> Skipped due to previous critical failure.
+[6/6] Verifying Mission Environment       [FAIL]
+   >>> Skipped due to previous critical failure.
+--------------------------------------------------
+System Boot Failed. Process Terminated.
+```
+
+### 환경 변수 설정
 ```bash
 root@415865874d7f:/# vi /etc/bash.bashrc
 
@@ -713,18 +741,89 @@ root@c37974f555e9:/# source /etc/bash.bashrc
 ```
 <br>       
 
-secret.key 생성
+### 환경변수 적용 후 테스트 
 ```bash
-root@c37974f555e9:/# echo "agent_api_key_test" > /home/agent-admin/agent-app/api_keys/secret.key
+root@23be53df95b1:/# echo $AGENT_HOME
+/home/agent-admin/agent-app
+root@23be53df95b1:/# su - agent-admin
+agent-admin@23be53df95b1:~$ echo $AGENT_HOME
+/home/agent-admin/agent-app
+agent-admin@23be53df95b1:~$ /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'agent-admin' (uid=1001)
+[2/6] Verifying Environment Variables     [FAIL]
+   >>> Directory not found: /home/agent-admin/agent-app/upload_files
+   >>> File not found: /home/agent-admin/agent-app/api_keys
+[3/6] Checking Required Files             [FAIL]
+   >>> Skipped due to previous critical failure.
+[4/6] Checking Port Availability          [FAIL]
+   >>> Skipped due to previous critical failure.
+[5/6] Verifying Log Permission            [FAIL]
+   >>> Skipped due to previous critical failure.
+[6/6] Verifying Mission Environment       [FAIL]
+   >>> Skipped due to previous critical failure.
+--------------------------------------------------
+System Boot Failed. Process Terminated.
+```
+
+### secret.key 생성
+```bash
+agent-admin@23be53df95b1:~$ mkdir -p $AGENT_HOME/api_keys
+agent-admin@23be53df95b1:~$ echo "agent_api_key_test" > /home/agent-admin/agent-app/api_keys/secret.key
+
+agent-admin@23be53df95b1:~$ mkdir /home/agent-admin/agent-app/upload_files
+agent-admin@23be53df95b1:~$ /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'agent-admin' (uid=1001)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [FAIL]
+   >>> Log directory not found: /var/log/agent-app
+[6/6] Verifying Mission Environment       [FAIL]
+   >>> Skipped due to previous critical failure.
+--------------------------------------------------
+System Boot Failed. Process Terminated.
 ```
 <br>   
 
-monitor.sh 작성 
+### 로그 디렉토리 생성
+```bash
+root@23be53df95b1:/# mkdir -p /var/log/agent-app
+root@23be53df95b1:/# chown agent-admin:agent-core /var/log/agent-app
+root@23be53df95b1:/# su - agent-admin
+agent-admin@23be53df95b1:~$ rm /var/log/agent-app-leak
+rm: cannot remove '/var/log/agent-app-leak': No such file or directory
+agent-admin@23be53df95b1:~$ /usr/local/bin/agent-app-leak
+>>> Starting Agent Boot Sequence...
+[1/6] Checking User Account               [OK]
+   ... Running as service user 'agent-admin' (uid=1001)
+[2/6] Verifying Environment Variables     [OK]
+   ... All required Envs correct
+[3/6] Checking Required Files             [OK]
+   ... Verified 'secret.key' with correct key string.
+[4/6] Checking Port Availability          [OK]
+   ... Port 15034 is available.
+[5/6] Verifying Log Permission            [OK]
+   ... Log directory is writable: /var/log/agent-app
+[6/6] Verifying Mission Environment       [OK]
+   ... MEMORY_LIMIT=60MB, CPU_MAX_OCCUPY=20%, MULTI_THREAD_ENABLE=True
+------------------------------------------------------------
+All Boot Checks Passed!
+```
+
+### monitor.sh 작성 
 <details>
   <summary>monitor.sh 코드 </summary> 
   
 ```bash
-root@415865874d7f:/# vi /home/agent-admin/agent-app/bin/monitor.sh
+root@23be53df95b1:/# mkdir -p /home/agent-admin/agent-app/bin
+root@23be53df95b1:/# vi /home/agent-admin/agent-app/bin/monitor.sh
 ```
 <br>
 
@@ -771,44 +870,20 @@ done
 </details>  
 <br>
 
+### monitor.sh 권한 설정
+```bash
+root@23be53df95b1:/# chown agent-dev:agent-core /home/agent-admin/agent-app/bin/monitor.sh
+root@23be53df95b1:/# chmod 750 /home/agent-admin/agent-app/bin/monitor.sh
+root@23be53df95b1:/# ls -l /home/agent-admin/agent-app/bin/monitor.sh
+-rwxr-x--- 1 agent-dev agent-core 1669 Jun 29 09:20 /home/agent-admin/agent-app/bin/monitor.sh
+```
+
+### 실행 전 환경변수 설정 
 ```bash
 root@415865874d7f:/# su - agent-admin
 agent-admin@415865874d7f:~$ export MULTI_THREAD_ENABLE=0
 agent-admin@415865874d7f:~$ export MEMORY_LIMIT=60
 agent-admin@415865874d7f:~$ /usr/local/bin/agent-app-leak
--bash: /usr/local/bin/agent-app-leak: Permission denied
-```
-<br>
-
-agent-app-leak 권한 설정
-```bash
-root@415865874d7f:/# chmod +x /usr/local/bin/agent-app-leak
-```
-<br>
-
-```bash
-agent-admin@415865874d7f:~$ /usr/local/bin/agent-app-leak
->>> Starting Agent Boot Sequence...
-[1/6] Checking User Account               [OK]
-   ... Running as service user 'agent-admin' (uid=1001)
-[2/6] Verifying Environment Variables     [FAIL]
-   >>> Directory not found: /home/agent-admin/agent-app/upload_files
-[3/6] Checking Required Files             [FAIL]
-   >>> Skipped due to previous critical failure.
-[4/6] Checking Port Availability          [FAIL]
-   >>> Skipped due to previous critical failure.
-[5/6] Verifying Log Permission            [FAIL]
-   >>> Skipped due to previous critical failure.
-[6/6] Verifying Mission Environment       [FAIL]
-   >>> Skipped due to previous critical failure.
---------------------------------------------------
-System Boot Failed. Process Terminated.
-```
-<br>
-
-upload_files 폴더 생성
-```bash
-root@415865874d7f:/# mkdir /home/agent-admin/agent-app/upload_files
 ```
 <br>
 
